@@ -37,31 +37,30 @@ export function GuestbookWall({
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="rounded-lg border border-black/10 p-6 dark:border-white/10">
-        <GuestbookForm onSigned={refresh} />
-      </div>
+    <div className="flex flex-col gap-12">
+      <GuestbookForm onSigned={refresh} />
 
-      <ul className="flex flex-col gap-4">
+      <ul className="flex flex-col">
         {entries.length === 0 && (
-          <li className="text-sm text-black/50 dark:text-white/50">
-            No one&rsquo;s signed yet — be the first!
+          <li className="text-sm text-[var(--color-muted)]">
+            No one&rsquo;s signed yet — be the first.
           </li>
         )}
-        {entries.map((entry) => (
+        {entries.map((entry, index) => (
           <li
             key={entry.id}
-            className="rounded-lg border border-black/10 p-4 dark:border-white/10"
+            className="py-4"
+            style={
+              index > 0 ? { borderTop: "var(--rule-hair) solid var(--color-rule)" } : undefined
+            }
           >
             <div className="flex items-baseline justify-between gap-4">
-              <span className="font-medium">{entry.name}</span>
-              <span className="text-xs text-black/40 dark:text-white/40">
+              <span className="text-[var(--color-ink)]">{entry.name}</span>
+              <span className="text-xs text-[var(--color-muted)]">
                 {formatDate(entry.createdAt)}
               </span>
             </div>
-            <p className="mt-1 text-sm text-black/70 dark:text-white/70">
-              {entry.message}
-            </p>
+            <p className="mt-1 text-sm text-[var(--color-ink-2)]">{entry.message}</p>
           </li>
         ))}
       </ul>

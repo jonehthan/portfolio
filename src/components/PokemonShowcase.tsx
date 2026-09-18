@@ -12,18 +12,19 @@ export async function PokemonShowcase() {
   }
 
   return (
-    <ul className="grid gap-4 sm:grid-cols-3">
+    <ul className="grid gap-x-4 gap-y-6 sm:grid-cols-3">
       {cards.map((card) => (
         <li key={card.imageUrl} className="flex flex-col gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={card.imageUrl}
             alt={card.name}
-            className="w-full rounded-lg"
+            className="w-full"
+            style={{ borderRadius: "var(--radius-card)" }}
           />
           <div className="text-sm">
-            <p className="font-medium">{card.name}</p>
-            <p className="text-black/60 dark:text-white/60">
+            <p className="text-[var(--color-ink)]">{card.name}</p>
+            <p className="text-[var(--color-muted)]">
               {card.setName}
               {card.rarity ? ` · ${card.rarity}` : ""}
             </p>

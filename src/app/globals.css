@@ -1,26 +1,98 @@
 @import "tailwindcss";
+@import "../../tokens.css";
+
+/* Hallmark · genre: editorial · macrostructure: Portfolio Grid (Home) / Letter (Guestbook, Jukebox)
+ * theme: Garden · nav: N6 · footer: Ft6 · design-system: design.md · designed-as-app
+ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* next/font-loaded faces, layered over tokens.css's static fallback stacks */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-body: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-outlier: var(--font-geist-mono), ui-monospace, monospace;
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
+/* Only remap Tailwind's own generic theme slots (background/foreground/
+   sans/mono) — never reuse Tailwind's named scale suffixes (xs, md, 4xl, …)
+   as custom @theme keys, since those collide with Tailwind's built-in
+   sizing utilities (max-w-4xl, text-4xl, …) and silently corrupt them.
+   Everything else references tokens.css directly via var(--color-*) /
+   var(--space-*) / var(--font-*) in component styles. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+  --font-mono: var(--font-outlier);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--color-rule);
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* One orchestrated page-load reveal — Home (Portfolio Grid) only.
+   Applied via the `reveal` class; staggered by the --i custom property. */
+.reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: reveal var(--dur-long) var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+
+  .reveal {
+    animation: reveal-reduced 150ms linear forwards;
+  }
+
+  @keyframes reveal-reduced {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }

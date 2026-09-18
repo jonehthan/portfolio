@@ -31,26 +31,26 @@ export function JukeboxWall({
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="rounded-lg border border-black/10 p-6 dark:border-white/10">
-        <JukeboxForm onShared={refresh} />
-      </div>
+    <div className="flex flex-col gap-12">
+      <JukeboxForm onShared={refresh} />
 
-      <ul className="flex flex-col gap-6">
+      <ul className="flex flex-col gap-8">
         {entries.length === 0 && (
-          <li className="text-sm text-black/50 dark:text-white/50">
-            No songs shared yet — be the first!
+          <li className="text-sm text-[var(--color-muted)]">
+            No songs shared yet — be the first.
           </li>
         )}
-        {entries.map((entry) => (
-          <li key={entry.id} className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between gap-4">
-              <span className="text-sm font-medium">{entry.name}</span>
-            </div>
+        {entries.map((entry, index) => (
+          <li
+            key={entry.id}
+            className="flex flex-col gap-2 pt-6"
+            style={
+              index > 0 ? { borderTop: "var(--rule-hair) solid var(--color-rule)" } : undefined
+            }
+          >
+            <span className="text-sm text-[var(--color-ink)]">{entry.name}</span>
             {entry.caption && (
-              <p className="text-sm text-black/70 dark:text-white/70">
-                {entry.caption}
-              </p>
+              <p className="text-sm text-[var(--color-ink-2)]">{entry.caption}</p>
             )}
             <SpotifyEmbed url={entry.spotifyUrl} />
           </li>

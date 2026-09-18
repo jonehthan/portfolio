@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Hero } from "@/components/Hero";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
@@ -13,7 +14,17 @@ export default function Home() {
     <>
       <Hero />
 
-      <section id="projects" className="mx-auto max-w-4xl px-6 py-12">
+      <hr
+        aria-hidden="true"
+        className="mx-auto max-w-4xl border-0"
+        style={{ borderTop: "var(--rule-hair) solid var(--color-rule)" }}
+      />
+
+      <section
+        id="projects"
+        className="reveal mx-auto max-w-4xl px-6 py-16"
+        style={{ "--i": 1 } as CSSProperties}
+      >
         <SectionHeading
           title="Projects"
           description="A few things I've built. Each links out to the code."
@@ -21,12 +32,20 @@ export default function Home() {
         <ProjectsGrid projects={projects} />
       </section>
 
-      <section id="hobbies" className="mx-auto max-w-4xl px-6 py-12">
+      <section
+        id="hobbies"
+        className="reveal mx-auto max-w-4xl px-6 py-12"
+        style={{ "--i": 2 } as CSSProperties}
+      >
         <SectionHeading title={pokemonCollection.title} description={pokemonCollection.blurb} />
         <PokemonShowcase />
       </section>
 
-      <section id="dashboard" className="mx-auto max-w-4xl px-6 py-12">
+      <section
+        id="dashboard"
+        className="reveal mx-auto max-w-4xl px-6 py-20 sm:py-24"
+        style={{ "--i": 3 } as CSSProperties}
+      >
         <SectionHeading
           title="Living Dashboard"
           description="What I'm building and listening to, updated automatically."

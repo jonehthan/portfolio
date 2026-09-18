@@ -7,9 +7,14 @@ export function SectionHeading({
 }) {
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+      <h2
+        className="text-2xl text-[var(--color-ink)]"
+        style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.01em" }}
+      >
+        {title}
+      </h2>
       {description && (
-        <p className="mt-2 text-black/60 dark:text-white/60">{description}</p>
+        <p className="mt-2 max-w-xl text-[var(--color-ink-2)]">{description}</p>
       )}
     </div>
   );

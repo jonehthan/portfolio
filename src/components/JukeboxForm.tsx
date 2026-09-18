@@ -4,6 +4,13 @@ import { useState, type FormEvent } from "react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+const inputStyle = {
+  border: "var(--rule-hair) solid var(--color-rule)",
+  borderRadius: "var(--radius-input)",
+  outline: "2px solid transparent",
+  outlineOffset: "1px",
+};
+
 export function JukeboxForm({ onShared }: { onShared?: () => void }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -47,7 +54,7 @@ export function JukeboxForm({ onShared }: { onShared?: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label htmlFor="name" className="mb-1 block text-sm font-medium">
+        <label htmlFor="name" className="mb-1 block text-sm text-[var(--color-ink)]">
           Name
         </label>
         <input
@@ -56,12 +63,13 @@ export function JukeboxForm({ onShared }: { onShared?: () => void }) {
           type="text"
           required
           maxLength={50}
-          className="w-full rounded-md border border-black/15 px-3 py-2 text-sm outline-none focus:border-black/40 dark:border-white/15 dark:bg-transparent dark:focus:border-white/40"
+          className="w-full bg-[var(--color-paper)] px-3 py-2 text-sm text-[var(--color-ink)] transition-colors hover:bg-[var(--color-paper-2)]"
+          style={inputStyle}
         />
       </div>
 
       <div>
-        <label htmlFor="spotifyUrl" className="mb-1 block text-sm font-medium">
+        <label htmlFor="spotifyUrl" className="mb-1 block text-sm text-[var(--color-ink)]">
           Spotify link
         </label>
         <input
@@ -69,13 +77,14 @@ export function JukeboxForm({ onShared }: { onShared?: () => void }) {
           name="spotifyUrl"
           type="url"
           required
-          placeholder="https://open.spotify.com/track/..."
-          className="w-full rounded-md border border-black/15 px-3 py-2 text-sm outline-none focus:border-black/40 dark:border-white/15 dark:bg-transparent dark:focus:border-white/40"
+          placeholder="https://open.spotify.com/track/…"
+          className="w-full bg-[var(--color-paper)] px-3 py-2 text-sm text-[var(--color-ink)] transition-colors hover:bg-[var(--color-paper-2)]"
+          style={inputStyle}
         />
       </div>
 
       <div>
-        <label htmlFor="caption" className="mb-1 block text-sm font-medium">
+        <label htmlFor="caption" className="mb-1 block text-sm text-[var(--color-ink)]">
           Caption (optional)
         </label>
         <input
@@ -83,7 +92,8 @@ export function JukeboxForm({ onShared }: { onShared?: () => void }) {
           name="caption"
           type="text"
           maxLength={300}
-          className="w-full rounded-md border border-black/15 px-3 py-2 text-sm outline-none focus:border-black/40 dark:border-white/15 dark:bg-transparent dark:focus:border-white/40"
+          className="w-full bg-[var(--color-paper)] px-3 py-2 text-sm text-[var(--color-ink)] transition-colors hover:bg-[var(--color-paper-2)]"
+          style={inputStyle}
         />
       </div>
 
@@ -104,19 +114,20 @@ export function JukeboxForm({ onShared }: { onShared?: () => void }) {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="self-start rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 dark:bg-white dark:text-black"
+        className="inline-flex min-h-11 items-center gap-2 self-start px-5 text-sm text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] disabled:opacity-50"
+        style={{ border: "var(--rule-hair) solid var(--color-ink)", borderRadius: "var(--radius-input)" }}
       >
-        {status === "submitting" ? "Sharing..." : "Share a song"}
+        {status === "submitting" ? "Sharing…" : "Share a song"}
       </button>
 
-      {status === "success" && (
-        <p className="text-sm text-black/60 dark:text-white/60">
-          Thanks for sharing!
-        </p>
-      )}
-      {status === "error" && errorMessage && (
-        <p className="text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
-      )}
+      <p className="min-h-[1lh] text-sm">
+        {status === "success" && (
+          <span className="text-[var(--color-ink-2)]">Thanks for sharing!</span>
+        )}
+        {status === "error" && errorMessage && (
+          <span style={{ color: "var(--color-error)" }}>{errorMessage}</span>
+        )}
+      </p>
     </form>
   );
 }

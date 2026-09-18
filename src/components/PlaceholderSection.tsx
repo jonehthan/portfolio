@@ -11,15 +11,26 @@ export function PlaceholderSection({
     <div>
       {(title || description) && (
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+          {title && (
+            <h2
+              className="text-2xl text-[var(--color-ink)]"
+              style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.01em" }}
+            >
+              {title}
+            </h2>
+          )}
           {description && (
-            <p className="mt-2 text-black/60 dark:text-white/60">
-              {description}
-            </p>
+            <p className="mt-2 text-[var(--color-ink-2)]">{description}</p>
           )}
         </div>
       )}
-      <div className="rounded-lg border border-dashed border-black/15 p-8 text-center text-sm text-black/50 dark:border-white/15 dark:text-white/50">
+      <div
+        className="rounded p-8 text-center text-sm text-[var(--color-muted)]"
+        style={{
+          border: "var(--rule-hair) dashed var(--color-rule)",
+          borderRadius: "var(--radius-card)",
+        }}
+      >
         {note}
       </div>
     </div>

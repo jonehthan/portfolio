@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { dashboardSnapshots } from "@/db/schema";
@@ -16,22 +17,43 @@ async function getLatest<T>(source: "github" | "spotify"): Promise<T | null> {
   return (row?.data as T | undefined) ?? null;
 }
 
+function Card({ children }: { children: ReactNode }) {
+  return (
+    <div
+      className="p-5"
+      style={{ border: "var(--rule-hair) solid var(--color-rule)", borderRadius: "var(--radius-card)" }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function CardLabel({ children }: { children: ReactNode }) {
+  return (
+    <h3
+      className="text-xs uppercase text-[var(--color-muted)]"
+      style={{ letterSpacing: "0.08em" }}
+    >
+      {children}
+    </h3>
+  );
+}
+
 function GithubCard({ data }: { data: GithubSnapshot }) {
   return (
-    <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
-      <h3 className="font-medium">GitHub</h3>
-      <p className="mt-2 text-sm text-black/70 dark:text-white/70">
-        {data.totalContributions} contributions in the last year
+    <Card>
+      <CardLabel>GitHub</CardLabel>
+      <p
+        className="mt-2 text-3xl text-[var(--color-ink)]"
+        style={{ fontFamily: "var(--font-outlier)", fontVariantNumeric: "tabular-nums" }}
+      >
+        {data.totalContributions}
       </p>
+      <p className="text-sm text-[var(--color-ink-2)]">contributions in the last year</p>
       {data.topLanguages.length > 0 && (
-        <ul className="mt-3 flex flex-wrap gap-2">
+        <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs uppercase text-[var(--color-muted)]" style={{ letterSpacing: "0.06em" }}>
           {data.topLanguages.map((language) => (
-            <li
-              key={language}
-              className="rounded-full bg-black/5 px-2.5 py-1 text-xs text-black/70 dark:bg-white/10 dark:text-white/70"
-            >
-              {language}
-            </li>
+            <li key={language}>{language}</li>
           ))}
         </ul>
       )}
@@ -43,7 +65,7 @@ function GithubCard({ data }: { data: GithubSnapshot }) {
                 href={repo.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-black/70 underline-offset-2 hover:underline dark:text-white/70"
+                className="text-[var(--color-ink-2)] underline decoration-[var(--color-rule)] underline-offset-2 hover:text-[var(--color-accent)] hover:decoration-[var(--color-accent)]"
               >
                 {repo.name}
               </a>
@@ -51,7 +73,7 @@ function GithubCard({ data }: { data: GithubSnapshot }) {
           ))}
         </ul>
       )}
-    </div>
+    </Card>
   );
 }
 
@@ -60,43 +82,39 @@ function SpotifyCard({ data }: { data: SpotifySnapshot }) {
 
   if (!track) {
     return (
-      <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
-        <h3 className="font-medium">Spotify</h3>
-        <p className="mt-2 text-sm text-black/60 dark:text-white/60">
-          No listening activity yet.
-        </p>
-      </div>
+      <Card>
+        <CardLabel>Spotify</CardLabel>
+        <p className="mt-2 text-sm text-[var(--color-muted)]">No listening activity yet.</p>
+      </Card>
     );
   }
 
   return (
-    <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
-      <h3 className="font-medium">Spotify</h3>
-      <p className="mt-2 text-xs text-black/50 dark:text-white/50">
-        {data.isPlaying ? "Now playing" : "Last played"}
-      </p>
+    <Card>
+      <CardLabel>{data.isPlaying ? "Now playing" : "Last played"}</CardLabel>
       <a
         href={track.url}
         target="_blank"
         rel="noreferrer"
-        className="mt-2 flex items-center gap-3 hover:underline"
+        className="mt-3 flex items-center gap-3 group"
       >
         {track.albumArt && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={track.albumArt}
             alt=""
-            className="h-12 w-12 rounded-md object-cover"
+            className="h-14 w-14 object-cover"
+            style={{ borderRadius: "var(--radius-card)" }}
           />
         )}
         <span className="text-sm">
-          <span className="block font-medium">{track.name}</span>
-          <span className="block text-black/60 dark:text-white/60">
-            {track.artist}
+          <span className="block text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">
+            {track.name}
           </span>
+          <span className="block text-[var(--color-ink-2)]">{track.artist}</span>
         </span>
       </a>
-    </div>
+    </Card>
   );
 }
 

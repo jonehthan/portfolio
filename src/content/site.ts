@@ -3,8 +3,8 @@ export type NavLink = {
   href: string;
 };
 
+// "Home" is intentionally omitted — the wordmark in the masthead links there.
 export const navLinks: NavLink[] = [
-  { label: "Home", href: "/" },
   { label: "Projects", href: "/#projects" },
   { label: "Hobbies", href: "/#hobbies" },
   { label: "Guestbook", href: "/guestbook" },
@@ -13,6 +13,7 @@ export const navLinks: NavLink[] = [
 
 export const site = {
   name: "Your Name",
+  masthead: "2026 · Software & Hobbies",
   tagline: "Software engineer, building things and collecting Pokemon cards.",
   bio: "I'm a software engineer interested in building useful, well-crafted things. This site is one of them — a living portfolio with a guestbook, a dashboard of what I'm up to, and a few of my hobbies.",
   socials: [
