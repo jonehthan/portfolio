@@ -1,8 +1,8 @@
 import { Hero } from "@/components/Hero";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
-import { PlaceholderSection } from "@/components/PlaceholderSection";
 import { DashboardSection } from "@/components/DashboardSection";
+import { PokemonShowcase } from "@/components/PokemonShowcase";
 import { projects } from "@/content/projects";
 import { pokemonCollection } from "@/content/hobbies";
 
@@ -22,11 +22,8 @@ export default function Home() {
       </section>
 
       <section id="hobbies" className="mx-auto max-w-4xl px-6 py-12">
-        <PlaceholderSection
-          title="Hobbies"
-          description={pokemonCollection.blurb}
-          note="Pokemon card showcase coming soon — will pull real card art from the Pokemon TCG API."
-        />
+        <SectionHeading title={pokemonCollection.title} description={pokemonCollection.blurb} />
+        <PokemonShowcase />
       </section>
 
       <section id="dashboard" className="mx-auto max-w-4xl px-6 py-12">
