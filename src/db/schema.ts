@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
@@ -7,4 +7,11 @@ export const messages = pgTable("messages", {
   status: text("status", { enum: ["published", "flagged"] }).notNull(),
   ipHash: text("ip_hash").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const dashboardSnapshots = pgTable("dashboard_snapshots", {
+  id: serial("id").primaryKey(),
+  source: text("source", { enum: ["github", "spotify"] }).notNull(),
+  data: jsonb("data").notNull(),
+  fetchedAt: timestamp("fetched_at", { withTimezone: true }).notNull().defaultNow(),
 });

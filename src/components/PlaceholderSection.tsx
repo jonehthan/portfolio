@@ -3,7 +3,7 @@ export function PlaceholderSection({
   description,
   note,
 }: {
-  title: string;
+  title?: string;
   description?: string;
   note: string;
 }) {

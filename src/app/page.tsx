@@ -2,8 +2,11 @@ import { Hero } from "@/components/Hero";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { PlaceholderSection } from "@/components/PlaceholderSection";
+import { DashboardSection } from "@/components/DashboardSection";
 import { projects } from "@/content/projects";
 import { pokemonCollection } from "@/content/hobbies";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
@@ -27,11 +30,11 @@ export default function Home() {
       </section>
 
       <section id="dashboard" className="mx-auto max-w-4xl px-6 py-12">
-        <PlaceholderSection
+        <SectionHeading
           title="Living Dashboard"
           description="What I'm building and listening to, updated automatically."
-          note="GitHub activity + currently-playing Spotify track coming soon — needs the database and API wiring."
         />
+        <DashboardSection />
       </section>
     </>
   );
