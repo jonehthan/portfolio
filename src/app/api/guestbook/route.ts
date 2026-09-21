@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, desc, eq, gt } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 import { db } from "@/db";
 import { messages } from "@/db/schema";
 import { moderate, withinLengthLimits } from "@/lib/moderation";
 import { hashIp } from "@/lib/hash";
+import { getPublishedMessages } from "@/lib/board";
 
 const COOLDOWN_MS = 60_000;
 
@@ -14,19 +15,7 @@ function getClientIp(request: NextRequest): string {
 }
 
 export async function GET() {
-  const published = await db
-    .select({
-      id: messages.id,
-      name: messages.name,
-      message: messages.message,
-      createdAt: messages.createdAt,
-    })
-    .from(messages)
-    .where(eq(messages.status, "published"))
-    .orderBy(desc(messages.createdAt))
-    .limit(50);
-
-  return NextResponse.json({ messages: published });
+  return NextResponse.json({ messages: await getPublishedMessages() });
 }
 
 export async function POST(request: NextRequest) {
@@ -77,7 +66,7 @@ export async function POST(request: NextRequest) {
 
   if (recent.length > 0) {
     return NextResponse.json(
-      { error: "You're signing too quickly — please wait a moment and try again." },
+      { error: "You're signing too quickly. Please wait a moment and try again." },
       { status: 429 }
     );
   }
