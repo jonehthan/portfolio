@@ -7,7 +7,7 @@ export async function PokemonShowcase() {
 
   if (cards.length === 0) {
     return (
-      <PlaceholderSection note="No cards yet — add some to src/content/hobbies.ts." />
+      <PlaceholderSection note="No cards yet. Add some to src/content/hobbies.ts." />
     );
   }
 

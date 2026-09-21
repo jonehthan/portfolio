@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Sans, Geist_Mono } from "next/font/google";
+import { Newsreader, IBM_Plex_Sans, Geist_Mono } from "next/font/google";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { site } from "@/content/site";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
   style: ["normal", "italic"],
 });
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${ibmPlexSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${newsreader.variable} ${ibmPlexSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <Nav />

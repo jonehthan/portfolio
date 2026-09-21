@@ -1,10 +1,10 @@
 export type PokemonCardQuery = {
   // Name(s) to try searching pokemontcg.io by, in order, until one returns
-  // results — some cards (trainer-owned Pokemon, "ex"/"Mega" variants) need
+  // results, some cards (trainer-owned Pokemon, "ex"/"Mega" variants) need
   // a different literal name than the plain species name.
   nameQueries: string[];
   // The exact card number (as printed, e.g. "116" for a "116/084" secret
-  // rare) — when set, this alone picks the print, since it's unambiguous.
+  // rare), when set, this alone picks the print, since it's unambiguous.
   numberHint?: string;
   // Optional hint (e.g. a word from the set name) to pick the right print
   // when a name matches cards across multiple sets and numberHint isn't set.
@@ -32,7 +32,7 @@ type RawCard = {
 async function searchByName(nameQuery: string): Promise<RawCard[]> {
   // pageSize is high on purpose: a common name (e.g. "Dragonair") can have
   // 25+ printings, and the print we want isn't guaranteed to sort near the
-  // top — pickBestMatch needs to see every candidate to score correctly.
+  // top, pickBestMatch needs to see every candidate to score correctly.
   const url = `https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(
     `name:"${nameQuery}"`
   )}&pageSize=250`;
@@ -43,7 +43,7 @@ async function searchByName(nameQuery: string): Promise<RawCard[]> {
   }
 
   // The free, unauthenticated pokemontcg.io tier is known to be flaky
-  // (transient 500/502/403s under normal use) — a couple of retries with a
+  // (transient 500/502/403s under normal use), a couple of retries with a
   // short backoff smooths over that without needing an API key.
   for (let attempt = 0; attempt < 3; attempt++) {
     try {

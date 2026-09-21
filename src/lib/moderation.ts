@@ -1,9 +1,9 @@
 // Local, zero-cost moderation: a wordlist check plus a few spam heuristics.
-// Deliberately conservative — anything that trips a check is "flagged"
+// Deliberately conservative, anything that trips a check is "flagged"
 // (hidden, not deleted) rather than rejected outright, so nothing submitted
 // in good faith is silently lost and you can review flagged rows later.
 
-// Small, hand-maintained list — tune as needed. Matched as whole words,
+// Small, hand-maintained list, tune as needed. Matched as whole words,
 // case-insensitively, against both name and message.
 const BLOCKED_WORDS = [
   "fuck",
@@ -30,7 +30,7 @@ export type ModerationResult = {
 
 function containsBlockedWord(text: string): boolean {
   const lower = text.toLowerCase();
-  // Boundary only at the start — catches inflected forms too (e.g. "fucking",
+  // Boundary only at the start, catches inflected forms too (e.g. "fucking",
   // "bitches") without requiring an exact whole-word match.
   return BLOCKED_WORDS.some((word) => new RegExp(`\\b${word}`, "i").test(lower));
 }

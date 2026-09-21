@@ -6,7 +6,7 @@
  */
 
 :root {
-  /* Color — light */
+  /* Color: light */
   --color-paper: oklch(97% 0.010 140);
   --color-paper-2: oklch(94% 0.012 140);
   --color-rule: oklch(84% 0.010 140);
@@ -20,11 +20,11 @@
   --color-error: oklch(58% 0.200 25);
 
   /* Font */
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-display: "Newsreader", ui-serif, Georgia, serif;
   --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-outlier: "Geist Mono", ui-monospace, monospace;
 
-  /* Space — 4pt scale */
+  /* Space: 4pt scale */
   --space-3xs: 0.125rem;
   --space-2xs: 0.25rem;
   --space-xs: 0.5rem;
@@ -36,7 +36,7 @@
   --space-3xl: 6rem;
   --space-4xl: 9rem;
 
-  /* Text — 1.25 ratio */
+  /* Text: 1.25 ratio */
   --text-xs: 0.64rem;
   --text-sm: 0.8rem;
   --text-base: 1rem;

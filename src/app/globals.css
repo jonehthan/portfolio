@@ -1,13 +1,13 @@
 @import "tailwindcss";
 @import "../../tokens.css";
 
-/* Hallmark · genre: editorial · macrostructure: Portfolio Grid (Home) / Letter (Guestbook, Jukebox)
+/* Hallmark · genre: editorial · macrostructure: Portfolio Grid (single-page profile)
  * theme: Garden · nav: N6 · footer: Ft6 · design-system: design.md · designed-as-app
  */
 
 :root {
   /* next/font-loaded faces, layered over tokens.css's static fallback stacks */
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
   --font-body: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
   --font-outlier: var(--font-geist-mono), ui-monospace, monospace;
 }
@@ -18,7 +18,7 @@ body {
 }
 
 /* Only remap Tailwind's own generic theme slots (background/foreground/
-   sans/mono) — never reuse Tailwind's named scale suffixes (xs, md, 4xl, …)
+   sans/mono), never reuse Tailwind's named scale suffixes (xs, md, 4xl, …)
    as custom @theme keys, since those collide with Tailwind's built-in
    sizing utilities (max-w-4xl, text-4xl, …) and silently corrupt them.
    Everything else references tokens.css directly via var(--color-*) /
@@ -37,8 +37,12 @@ body {
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
 
-* {
-  border-color: var(--color-rule);
+/* In the base layer so Tailwind border-color utilities (hover/focus states)
+   can still override this default. */
+@layer base {
+  * {
+    border-color: var(--color-rule);
+  }
 }
 
 a {
@@ -50,17 +54,21 @@ a {
   color: var(--color-accent-ink);
 }
 
-:focus {
-  outline: none;
+/* Base layer, so a component can opt out (e.g. underline-only fields draw
+   their own focus state with focus:outline-none). */
+@layer base {
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: inherit;
+  }
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-  border-radius: inherit;
-}
-
-/* One orchestrated page-load reveal — Home (Portfolio Grid) only.
+/* One orchestrated page-load reveal, Home (Portfolio Grid) only.
    Applied via the `reveal` class; staggered by the --i custom property. */
 .reveal {
   opacity: 0;
@@ -76,6 +84,60 @@ a {
   }
 }
 
+/* Living Dashboard: the record spins only while a track is playing, and
+   slides a little further out of its sleeve on hover. */
+.record {
+  transition: transform 500ms var(--ease-out);
+}
+
+.sleeve:hover .record,
+a:focus-visible .record {
+  transform: translateX(16px);
+}
+
+.record-spin {
+  animation: record-spin 9s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes record-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.eq i {
+  display: block;
+  width: 3px;
+  background: var(--color-accent);
+  animation: eq-bar 900ms ease-in-out infinite;
+}
+
+.eq i:nth-child(2) {
+  animation-delay: 200ms;
+}
+
+.eq i:nth-child(3) {
+  animation-delay: 400ms;
+}
+
+@keyframes eq-bar {
+  0%,
+  100% {
+    height: 3px;
+  }
+  50% {
+    height: 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -87,6 +149,15 @@ a {
 
   .reveal {
     animation: reveal-reduced 150ms linear forwards;
+  }
+
+  .record-spin,
+  .eq i {
+    animation: none !important;
+  }
+
+  .record {
+    transition: none;
   }
 
   @keyframes reveal-reduced {
