@@ -8,7 +8,7 @@ system needs to grow.
 editorial
 
 ## Macrostructure family
-- **Home (a single-page profile)** (intro + Projects + Hobbies + Living Dashboard + Message board + Songs & playlists): **Portfolio Grid**, work-as-cards, adapted without fabricated project thumbnails (typographic cards where no real image exists; real card art on Hobbies). No separate pages or nav tabs; the message board and song board sit in a right-hand column on wide screens (input on top, submissions listed beneath) and stack below on small ones.
+- **Home (a single-page profile)** (intro + Projects + Hobbies + Living Dashboard + Message board + Songs & playlists): **Portfolio Grid**, adapted without boxes: Projects, Experience, and the dashboard are hairline-separated typographic lists (no fabricated project thumbnails); real card art appears only on Hobbies. No separate pages or nav tabs; the message board and song board sit in a right-hand column on wide screens (input on top, submissions listed beneath) and stack below on small ones.
 
 ## Theme: Garden
 - `--color-paper`    oklch(97% 0.010 140)

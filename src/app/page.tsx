@@ -5,7 +5,7 @@ import { activities, experience } from "@/content/profile";
 import { Experience } from "@/components/Experience";
 import { Education } from "@/components/Education";
 import { Skills } from "@/components/Skills";
-import { ProjectsGrid } from "@/components/ProjectsGrid";
+import { ProjectsList } from "@/components/ProjectsList";
 import { DashboardSection } from "@/components/DashboardSection";
 import { PokemonShowcase } from "@/components/PokemonShowcase";
 import { MessageBoard } from "@/components/MessageBoard";
@@ -40,7 +40,7 @@ export default async function Home() {
 
         <section id="projects" className="reveal py-12" style={{ "--i": 2 } as CSSProperties}>
           <SectionHeading title="Projects" description="Things I've built, from ML to full-stack." />
-          <ProjectsGrid projects={projects} />
+          <ProjectsList projects={projects} />
         </section>
 
         <section id="education" className="reveal py-12" style={{ "--i": 3 } as CSSProperties}>
