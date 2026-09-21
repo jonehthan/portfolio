@@ -1,8 +1,7 @@
+import Link from "next/link";
 import { site } from "@/content/site";
 
 export function Footer() {
-  const email = site.socials.find((s) => s.label === "Email");
-
   return (
     <footer className="mx-auto px-6 py-16" style={{ maxWidth: "60ch" }}>
       <p
@@ -11,25 +10,17 @@ export function Footer() {
       >
         Yours,
         <br />
-        <span className="not-italic font-semibold">— {site.name}</span>
+        <span className="not-italic font-semibold">{site.name}</span>
       </p>
       <p className="mt-4 text-sm text-[var(--color-muted)]">
-        P.S. — say hello in the{" "}
-        <a
-          href="/guestbook"
-          className="text-[var(--color-ink-2)] underline decoration-[var(--color-rule)] underline-offset-2 hover:text-[var(--color-accent)]"
-        >
-          guestbook
-        </a>
-        , or write{email ? " " : " me "}
-        {email ? (
-          <a
-            href={email.href}
-            className="text-[var(--color-ink-2)] underline decoration-[var(--color-rule)] underline-offset-2 hover:text-[var(--color-accent)]"
-          >
-            directly
-          </a>
-        ) : null}
+        P.S. Say{" "}
+        <Link href="/#messages" className="text-[var(--color-ink-2)] underline decoration-[var(--color-rule)] underline-offset-2 hover:text-[var(--color-accent)]">
+          hello
+        </Link>
+        , or add your favorite{" "}
+        <Link href="/#songs" className="text-[var(--color-ink-2)] underline decoration-[var(--color-rule)] underline-offset-2 hover:text-[var(--color-accent)]">
+          song, playlist, or album
+        </Link>
         .
       </p>
       <ul className="mt-6 flex gap-x-6 text-xs uppercase text-[var(--color-muted)]" style={{ letterSpacing: "0.08em" }}>

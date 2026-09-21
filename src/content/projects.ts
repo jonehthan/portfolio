@@ -1,32 +1,33 @@
 export type Project = {
   title: string;
+  period: string;
   description: string;
   tags: string[];
-  repoUrl: string;
-  homepageUrl?: string;
+  repoUrl?: string;
 };
 
-// Swap these out for your real projects — each one just needs a repo link.
 export const projects: Project[] = [
   {
-    title: "Project One",
+    title: "Spotify Popularity Predictor",
+    period: "December 2025",
     description:
-      "A short, honest description of what this project does and why you built it.",
-    tags: ["TypeScript", "Next.js"],
-    repoUrl: "https://github.com/your-username/project-one",
+      "A multi-layer perceptron that predicts song popularity on an imbalanced Spotify dataset (~78% non-popular), using class weighting and PR-AUC as the primary metric. A search across 1,080 configurations found the best architecture, and keeping the original features beat PCA, which discarded class-discriminative low-variance signal.",
+    tags: ["Python", "TensorFlow", "scikit-learn", "Pandas"],
   },
   {
-    title: "Project Two",
+    title: "Flavor Feed",
+    period: "August – December 2025",
     description:
-      "A short, honest description of what this project does and why you built it.",
-    tags: ["Python"],
-    repoUrl: "https://github.com/your-username/project-two",
+      "A multi-user social recipe-sharing web app. I led the full stack: system architecture, RESTful API, and database schema, a responsive React frontend with real-time updates, and Flask + MySQL services tuned for concurrent users.",
+    tags: ["React", "Flask", "MySQL"],
+    repoUrl: "https://github.com/jonehthan/Flavor-Feed",
   },
   {
-    title: "Project Three",
+    title: "Taskify",
+    period: "January – May 2025",
     description:
-      "A short, honest description of what this project does and why you built it.",
-    tags: ["Go", "CLI"],
-    repoUrl: "https://github.com/your-username/project-three",
+      "A Python task management app with SQLite persistence and Matplotlib analytics that show productivity trends, built from client requirements and shipped with 90% user satisfaction.",
+    tags: ["Python", "SQLite", "Matplotlib"],
+    repoUrl: "https://github.com/ebaonguyen/TaskManager",
   },
 ];

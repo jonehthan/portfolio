@@ -1,139 +1,100 @@
 import type { ReactNode } from "react";
-import { desc, eq } from "drizzle-orm";
-import { db } from "@/db";
-import { dashboardSnapshots } from "@/db/schema";
 import type { GithubSnapshot } from "@/lib/github";
-import type { SpotifySnapshot } from "@/lib/spotify";
+import { getLatestSnapshot, getSpotifySnapshot } from "@/lib/dashboard";
+import { NowSpinning } from "@/components/NowSpinning";
 import { PlaceholderSection } from "@/components/PlaceholderSection";
 
-async function getLatest<T>(source: "github" | "spotify"): Promise<T | null> {
-  const [row] = await db
-    .select({ data: dashboardSnapshots.data })
-    .from(dashboardSnapshots)
-    .where(eq(dashboardSnapshots.source, source))
-    .orderBy(desc(dashboardSnapshots.fetchedAt))
-    .limit(1);
-
-  return (row?.data as T | undefined) ?? null;
-}
-
-function Card({ children }: { children: ReactNode }) {
+function LedgerRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
   return (
     <div
-      className="p-5"
-      style={{ border: "var(--rule-hair) solid var(--color-rule)", borderRadius: "var(--radius-card)" }}
+      className="flex items-baseline gap-3 py-3 first:pt-0 last:border-b-0"
+      style={{ borderBottom: "var(--rule-hair) solid var(--color-rule)" }}
     >
-      {children}
+      <dt
+        className="flex-none text-xs uppercase text-[var(--color-muted)]"
+        style={{ letterSpacing: "0.08em" }}
+      >
+        {label}
+      </dt>
+      <span
+        aria-hidden="true"
+        className="min-w-4 flex-1"
+        style={{
+          borderBottom: "1px dotted var(--color-neutral)",
+          transform: "translateY(-3px)",
+        }}
+      />
+      <dd className="max-w-[65%] text-right text-sm text-[var(--color-ink)]">
+        {children}
+      </dd>
     </div>
   );
 }
 
-function CardLabel({ children }: { children: ReactNode }) {
+function GithubLedger({ data }: { data: GithubSnapshot }) {
   return (
-    <h3
-      className="text-xs uppercase text-[var(--color-muted)]"
-      style={{ letterSpacing: "0.08em" }}
-    >
-      {children}
-    </h3>
-  );
-}
+    <dl>
+      <LedgerRow label="Contributions">
+        <span
+          style={{
+            fontFamily: "var(--font-outlier)",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {data.totalContributions}
+        </span>{" "}
+        <span className="text-[var(--color-ink-2)]">in the last year</span>
+      </LedgerRow>
 
-function GithubCard({ data }: { data: GithubSnapshot }) {
-  return (
-    <Card>
-      <CardLabel>GitHub</CardLabel>
-      <p
-        className="mt-2 text-3xl text-[var(--color-ink)]"
-        style={{ fontFamily: "var(--font-outlier)", fontVariantNumeric: "tabular-nums" }}
-      >
-        {data.totalContributions}
-      </p>
-      <p className="text-sm text-[var(--color-ink-2)]">contributions in the last year</p>
       {data.topLanguages.length > 0 && (
-        <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs uppercase text-[var(--color-muted)]" style={{ letterSpacing: "0.06em" }}>
-          {data.topLanguages.map((language) => (
-            <li key={language}>{language}</li>
-          ))}
-        </ul>
+        <LedgerRow label="Top languages">
+          {data.topLanguages.join(", ")}
+        </LedgerRow>
       )}
+
       {data.recentRepos.length > 0 && (
-        <ul className="mt-4 flex flex-col gap-1.5 text-sm">
-          {data.recentRepos.map((repo) => (
-            <li key={repo.url}>
+        <LedgerRow label="Recent work">
+          {data.recentRepos.map((repo, index) => (
+            <span key={repo.url}>
+              {index > 0 && ", "}
               <a
                 href={repo.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[var(--color-ink-2)] underline decoration-[var(--color-rule)] underline-offset-2 hover:text-[var(--color-accent)] hover:decoration-[var(--color-accent)]"
+                className="underline decoration-[var(--color-rule)] underline-offset-2 hover:text-[var(--color-accent)] hover:decoration-[var(--color-accent)]"
               >
                 {repo.name}
               </a>
-            </li>
+            </span>
           ))}
-        </ul>
+        </LedgerRow>
       )}
-    </Card>
-  );
-}
-
-function SpotifyCard({ data }: { data: SpotifySnapshot }) {
-  const track = data.track;
-
-  if (!track) {
-    return (
-      <Card>
-        <CardLabel>Spotify</CardLabel>
-        <p className="mt-2 text-sm text-[var(--color-muted)]">No listening activity yet.</p>
-      </Card>
-    );
-  }
-
-  return (
-    <Card>
-      <CardLabel>{data.isPlaying ? "Now playing" : "Last played"}</CardLabel>
-      <a
-        href={track.url}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-3 flex items-center gap-3 group"
-      >
-        {track.albumArt && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={track.albumArt}
-            alt=""
-            className="h-14 w-14 object-cover"
-            style={{ borderRadius: "var(--radius-card)" }}
-          />
-        )}
-        <span className="text-sm">
-          <span className="block text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">
-            {track.name}
-          </span>
-          <span className="block text-[var(--color-ink-2)]">{track.artist}</span>
-        </span>
-      </a>
-    </Card>
+    </dl>
   );
 }
 
 export async function DashboardSection() {
   const [github, spotify] = await Promise.all([
-    getLatest<GithubSnapshot>("github"),
-    getLatest<SpotifySnapshot>("spotify"),
+    getLatestSnapshot<GithubSnapshot>("github"),
+    getSpotifySnapshot(),
   ]);
 
   if (!github && !spotify) {
     return (
-      <PlaceholderSection note="No data yet — this fills in after the first refresh runs." />
+      <PlaceholderSection note="No data yet. This fills in after the first refresh runs." />
     );
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {github && <GithubCard data={github} />}
-      {spotify && <SpotifyCard data={spotify} />}
+    <div className="flex flex-col gap-10">
+      {github && <GithubLedger data={github} />}
+      {spotify && <NowSpinning initial={spotify} />}
     </div>
   );
 }
