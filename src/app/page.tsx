@@ -71,7 +71,7 @@ export default async function Home() {
         <section id="records" className="reveal py-12" style={{ "--i": 7 } as CSSProperties}>
           <SectionHeading
             title="Record Collection"
-            description="What's been landing on my shelf lately, pulled in from Discogs."
+            description="The priciest records on my shelf, ranked by current Discogs marketplace value."
           />
           <DiscogsShowcase />
         </section>

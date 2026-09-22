@@ -5,6 +5,10 @@ export type DiscogsRecord = {
   year: number | null;
   coverUrl: string;
   url: string;
+  // Current lowest Discogs marketplace listing for this release, in the
+  // currency Discogs reports it in (usually USD). Null when nobody's
+  // currently selling a copy.
+  price: { value: number; currency: string } | null;
 };
 
 export type DiscogsCollection = {
@@ -13,7 +17,7 @@ export type DiscogsCollection = {
   // Median collection value as Discogs formats it (e.g. "$1,234.56"), or null
   // when the value endpoint isn't available.
   medianValue: string | null;
-  recent: DiscogsRecord[];
+  topPriced: DiscogsRecord[];
 };
 
 type RawRelease = {
@@ -27,8 +31,18 @@ type RawRelease = {
   };
 };
 
+type MarketplaceStats = {
+  lowest_price: { value: number; currency: string } | null;
+};
+
 const API = "https://api.discogs.com";
-const RECENT_COUNT = 6;
+const TOP_COUNT = 6;
+// Discogs' collection endpoint has no price field and can't be sorted by
+// one, so pricing means one marketplace-stats lookup per release. Capped to
+// the this-many most-recently-added releases so a big collection can't blow
+// past Discogs' 60 requests/min rate limit in a single refresh.
+const MAX_CONSIDERED = 50;
+const PRICE_CONCURRENCY = 10;
 
 async function discogsGet<T>(path: string, token: string): Promise<T | null> {
   try {
@@ -47,6 +61,28 @@ async function discogsGet<T>(path: string, token: string): Promise<T | null> {
   }
 }
 
+// Runs `fn` over `items` with at most `limit` in flight at once.
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T) => Promise<R>
+): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let next = 0;
+
+  async function worker() {
+    while (next < items.length) {
+      const index = next++;
+      results[index] = await fn(items[index]);
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, worker)
+  );
+  return results;
+}
+
 // Discogs appends " (2)" style suffixes to disambiguate same-named artists.
 function cleanArtist(name: string): string {
   return name.replace(/\s\(\d+\)$/, "");
@@ -59,39 +95,50 @@ export async function fetchDiscogsCollection(): Promise<DiscogsCollection | null
 
   const user = encodeURIComponent(username);
 
-  const [releases, value] = await Promise.all([
+  const [releasesPage, value] = await Promise.all([
     discogsGet<{
       pagination: { items: number };
       releases: RawRelease[];
     }>(
-      `/users/${user}/collection/folders/0/releases?sort=added&sort_order=desc&per_page=${RECENT_COUNT}`,
+      `/users/${user}/collection/folders/0/releases?sort=added&sort_order=desc&per_page=${MAX_CONSIDERED}`,
       token
     ),
     discogsGet<{ median: string }>(`/users/${user}/collection/value`, token),
   ]);
 
-  if (!releases) return null;
+  if (!releasesPage) return null;
 
-  const recent = releases.releases.flatMap((release): DiscogsRecord[] => {
-    const info = release.basic_information;
-    const coverUrl = info.cover_image || info.thumb;
-    if (!coverUrl) return [];
-    return [
-      {
+  const withPrices = await mapWithConcurrency(
+    releasesPage.releases,
+    PRICE_CONCURRENCY,
+    async (release): Promise<DiscogsRecord | null> => {
+      const info = release.basic_information;
+      const coverUrl = info.cover_image || info.thumb;
+      if (!coverUrl) return null;
+
+      const stats = await discogsGet<MarketplaceStats>(`/marketplace/stats/${info.id}`, token);
+
+      return {
         id: info.id,
         title: info.title,
         artist: info.artists?.map((artist) => cleanArtist(artist.name)).join(", ") ?? "",
         year: info.year || null,
         coverUrl,
         url: `https://www.discogs.com/release/${info.id}`,
-      },
-    ];
-  });
+        price: stats?.lowest_price ?? null,
+      };
+    }
+  );
+
+  const topPriced = withPrices
+    .filter((record): record is DiscogsRecord => record !== null && record.price !== null)
+    .sort((a, b) => b.price!.value - a.price!.value)
+    .slice(0, TOP_COUNT);
 
   return {
     profileUrl: `https://www.discogs.com/user/${user}/collection`,
-    totalRecords: releases.pagination.items,
+    totalRecords: releasesPage.pagination.items,
     medianValue: value?.median ?? null,
-    recent,
+    topPriced,
   };
 }
