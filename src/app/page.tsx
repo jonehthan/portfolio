@@ -8,6 +8,7 @@ import { Skills } from "@/components/Skills";
 import { ProjectsList } from "@/components/ProjectsList";
 import { DashboardSection } from "@/components/DashboardSection";
 import { PokemonShowcase } from "@/components/PokemonShowcase";
+import { DiscogsShowcase } from "@/components/DiscogsShowcase";
 import { MessageBoard } from "@/components/MessageBoard";
 import { SongBoard } from "@/components/SongBoard";
 import { getPublishedMessages, getPublishedSongs } from "@/lib/board";
@@ -67,10 +68,18 @@ export default async function Home() {
           <PokemonShowcase />
         </section>
 
+        <section id="records" className="reveal py-12" style={{ "--i": 7 } as CSSProperties}>
+          <SectionHeading
+            title="Record Collection"
+            description="What's been landing on my shelf lately, pulled in from Discogs."
+          />
+          <DiscogsShowcase />
+        </section>
+
         <section
           id="dashboard"
           className="reveal py-20 sm:py-24"
-          style={{ "--i": 7 } as CSSProperties}
+          style={{ "--i": 8 } as CSSProperties}
         >
           <SectionHeading
             title="Living Dashboard"
@@ -83,7 +92,7 @@ export default async function Home() {
       {/* Right-hand column on wide screens; stacks below the profile on small ones. */}
       <aside
         className="reveal flex flex-col gap-14 pb-20 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:py-16 lg:pb-6"
-        style={{ "--i": 8 } as CSSProperties}
+        style={{ "--i": 9 } as CSSProperties}
       >
         <section id="messages" className="scroll-mt-6">
           <SectionHeading title="Message board" description="Leave a note. A hello is plenty." />
