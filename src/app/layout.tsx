@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Newsreader, IBM_Plex_Sans, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CommandMenu } from "@/components/CommandMenu";
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
