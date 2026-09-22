@@ -6,7 +6,7 @@ export function Nav() {
     <header className="px-6 pt-4">
       <div className="mx-auto grid max-w-6xl gap-2 text-center">
         <p
-          className="text-xs uppercase text-[var(--color-muted)]"
+          className="px-24 text-xs uppercase text-[var(--color-muted)] sm:px-0"
           style={{ letterSpacing: "0.08em", fontVariant: "small-caps" }}
         >
           {site.masthead}
